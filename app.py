@@ -115,7 +115,7 @@ def plot_bar(df: pd.DataFrame) -> go.Figure:
         )
     )
 
-    fig.update_layout(showlegend=True, legend_orientation="h")
+    fig.update_layout(showlegend=True, legend_orientation="h", legend_y=-0.15)
     fig.update_yaxes(range=[0, 105], ticksuffix="%")
 
     st.plotly_chart(fig, use_container_width=True)
