@@ -78,6 +78,7 @@ def plot_radar(df: pd.DataFrame) -> None:
         polar_angularaxis_rotation=90,
         polar_angularaxis_direction="clockwise",
         hovermode="x unified",
+        legend_orientation="h",
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -114,7 +115,7 @@ def plot_bar(df: pd.DataFrame) -> go.Figure:
         )
     )
 
-    fig.update_layout(showlegend=True)
+    fig.update_layout(showlegend=True, legend_orientation="h")
     fig.update_yaxes(range=[0, 105], ticksuffix="%")
 
     st.plotly_chart(fig, use_container_width=True)
@@ -122,18 +123,18 @@ def plot_bar(df: pd.DataFrame) -> go.Figure:
 
 def write_statistics(df: pd.DataFrame) -> None:
     """Write summary statistics to screen."""
-    total_produced = round(df["energy_produced"].sum(), 1)
-    total_consumed = round(df["energy_consumed"].sum(), 1)
-    cost_saved = round(total_consumed * PRICE_PER_KWH, 2)
+    total_produced = df["energy_produced"].sum()
+    total_consumed = df["energy_consumed"].sum()
+    cost_saved = total_consumed * PRICE_PER_KWH
 
     col_one, col_two, col_three = st.columns(3)
 
     with col_one:
-        st.metric("Total Solar Energy Produced", f"{total_produced} kWh")
+        st.metric("Total Solar Energy Produced", f"{total_produced:.0f} kWh")
     with col_two:
-        st.metric("Total Solar Energy Consumed", f"{total_consumed} kWh")
+        st.metric("Total Solar Energy Consumed", f"{total_consumed:.0f} kWh")
     with col_three:
-        st.metric("Total Cost Savings", f"{cost_saved} €")
+        st.metric("Total Cost Savings", f"{cost_saved:.0f} €")
 
 
 def main() -> None:
