@@ -59,6 +59,7 @@ def plot_radar(df: pd.DataFrame) -> None:
             theta=df["month_name"],
             fill="toself",
             name="Solar Energy Produced [kWh]",
+            hovertemplate=("Month: %{theta}<br>Produced: %{r} kWh<extra></extra>"),
         )
     )
 
@@ -68,6 +69,7 @@ def plot_radar(df: pd.DataFrame) -> None:
             theta=df["month_name"],
             fill="toself",
             name="Solar Energy Fed Into Grid [kWh]",
+            hovertemplate=("Month: %{theta}<br>Fed Into Grid: %{r} kWh<extra></extra>"),
         )
     )
 
@@ -75,6 +77,7 @@ def plot_radar(df: pd.DataFrame) -> None:
         template="plotly_dark",
         polar_angularaxis_rotation=90,
         polar_angularaxis_direction="clockwise",
+        hovermode="x unified",
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -89,21 +92,25 @@ def plot_bar(df: pd.DataFrame) -> go.Figure:
             x=df["month_name"],
             y=df["energy_consumed_relative"].round(2),
             name="Self-consumed Solar Energy [%]",
+            hovertemplate=(
+                "Month: %{x}<br>" "Fraction of Energy Consumed: %{y}<extra></extra>"
+            ),
         )
     )
 
-    average_self_consumed_energy = (
-        df["energy_consumed"].sum() / df["energy_produced"].sum() * 100
+    average_self_consumed_energy = round(
+        df["energy_consumed"].sum() / df["energy_produced"].sum() * 100, 2
     )
 
     fig.add_trace(
         go.Scatter(
-            x=[df["month_name"].iloc[0], df["month_name"].iloc[-1]],
-            y=[average_self_consumed_energy] * 2,
+            x=df["month_name"],
+            y=[average_self_consumed_energy] * 12,
             name="Average Self-consumed Solar Energy [%]",
             line_color="red",
             line_dash="dot",
             mode="lines",
+            hovertemplate=("Average Energy Consumed: %{y}<br><extra></extra>"),
         )
     )
 
@@ -133,7 +140,7 @@ def main() -> None:
     """Main function."""
     st.set_page_config(page_title="Balcony Solar", page_icon="☀️")
 
-    st.title("Blacony Solar Statistics")
+    st.title("Balcony Solar Statistics")
     st.markdown(
         'I tracked the energy production (and consumption) of my "Balkonkraftwerk" over a '
         "full year. For the energy fed into grid I do not get disbursement so I tried to "
